@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/company/v1")
@@ -36,6 +37,13 @@ public class CompanyController {
             return new ResponseEntity<>(created, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @PostMapping("/get-bulk")
+    public ResponseEntity<List<Company>> getBulkCompaniesByIds(@RequestBody Map<String, List<Long>> body){
+        List<Long> companyIds = body.get("companyIds");
+        List<Company> companies = this.companyService.findCompanyByIds(companyIds);
+        return new ResponseEntity<>(companies, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
